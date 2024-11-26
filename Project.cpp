@@ -11,7 +11,7 @@ using namespace std;
 Player *myPlayer;
 GameMechs *myGM;
 
-bool exitFlag;
+bool exitFlag; // Don't need this according to week 4 tutorial
 
 void Initialize(void);
 void GetInput(void);
@@ -53,6 +53,7 @@ void Initialize(void)
 
 void GetInput(void)
 {
+    //myGM->clearInput();
    if(MacUILib_hasChar())
    {
         char input = MacUILib_getChar();
