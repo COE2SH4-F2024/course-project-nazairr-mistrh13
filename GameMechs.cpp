@@ -12,7 +12,10 @@ GameMechs::GameMechs()
     boardSizeY= 15;
 
     food.setObjPos(-10,10,'o'); // Intially set the food position outside of the game board.
-    //food.setObjPos(5,5,'o');
+    srand(time(NULL));
+    
+    objPos blockedPos;
+    generateFood(blockedPos);
 }
 
 GameMechs::GameMechs(int boardX, int boardY)
@@ -26,6 +29,9 @@ GameMechs::GameMechs(int boardX, int boardY)
     boardSizeY = boardY;
 
     food.setObjPos(-10,10,'o'); // Intially set the food position outside of the game board.
+
+    objPos blockedPos;
+    generateFood(blockedPos);
 }
 
 // do you need a destructor?
@@ -100,29 +106,20 @@ void GameMechs::clearInput()
 // Does not work
 void GameMechs::generateFood (objPos blockOff)
 {
-    /*
-    srand(time(0));
-
-    // int x = rand() % (boardSizeX - 2) + 1;
-    // int y = rand() % (boardSizeY - 2) + 1;
-
-    // FROM PPA 3
-    //list[i].x = (rand() % (xRange - 2)) + 1;
-    //list[i].y = (rand() % (yRange - 2)) + 1;
-    
     int randX, randY;
+    objPos tempObj;
 
     do{
         randX = rand() % (boardSizeX - 2) + 1;
         randY = rand() % (boardSizeY - 2) + 1;
 
-        objPos tempObj(randX,randY,'o');
+        tempObj.setObjPos(randX,randY,'o');
 
-    }while (randX == blockOff.pos->x && randY == blockOff.pos->y);
+    }while (blockOff.isPosEqual(&tempObj));
     //while (blockOff.isPosEqual(&tempObj));
 
     food.setObjPos(randX, randY, 'o');
-    */
+    
 }
 
 objPos GameMechs::getFoodPos() const

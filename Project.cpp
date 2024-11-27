@@ -66,6 +66,15 @@ void RunLogic(void)
     myPlayer->updatePlayerDir();
     myPlayer->movePlayer();
     exitFlag = myGM->getExitFlagStatus();
+
+    objPos playerPos = myPlayer->getPlayerPos();
+    objPos foodPos = myGM->getFoodPos();
+
+    if(playerPos.isPosEqual(&foodPos))
+    {
+        myGM->incrementScore();
+        myGM->generateFood(playerPos);
+    }
 }
 
 void DrawScreen(void)
