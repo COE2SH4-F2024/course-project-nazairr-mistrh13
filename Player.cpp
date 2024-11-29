@@ -7,17 +7,6 @@ Player::Player(GameMechs* thisGMRef)
     playerPosList = new objPosArrayList();
     myDir = STOP;
 
-    // ADDED
-    // This will make the snake start at the center of the screen
-    // If you un comment this out, make sure to comment out the 
-    // objPos headPos(thisGMRef->getBoardSizeX(), thisGMRef->getBoardSizeY(),'*');
-    
-    /*
-    int startX = thisGMRef->getBoardSizeX()/2;
-    int startY = thisGMRef->getBoardSizeY()/2;
-    objPos headPos(startX,startY,'*');
-    */
-
     objPos headPos(thisGMRef->getBoardSizeX()/2,
                     thisGMRef->getBoardSizeY()/2,
                     '*');

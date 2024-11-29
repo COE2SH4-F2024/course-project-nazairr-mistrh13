@@ -144,8 +144,16 @@ void DrawScreen(void)
         MacUILib_printf("\n");
     }
 
+    MacUILib_printf("Controls are WASD\nTo exit the game click the escape key\n");
+    MacUILib_printf("----------------------------------------------------------------\n");
+    MacUILib_printf("Score: %d\n", myGM->getScore());
+
     if (myGM->getLoseFlagStatus()){
         MacUILib_printf("Game Over! You Lost!");
+    }
+    else if (myGM->getExitFlagStatus())
+    {
+        MacUILib_printf("Game Over! You Quit the Game");
     }
 }
 
