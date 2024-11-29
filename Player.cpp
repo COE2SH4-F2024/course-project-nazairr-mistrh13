@@ -4,27 +4,29 @@
 Player::Player(GameMechs* thisGMRef)
 {
     mainGameMechsRef = thisGMRef;
+    playerPosList = new objPosArrayList();
     myDir = STOP;
 
+    objPos headPos(thisGMRef->getBoardSizeX(),
+                    thisGMRef->getBoardSizeY(),
+                    '*');
+    
+    playerPosList->insertHead(headPos);
+
     // more actions to be included
-    playerPos.pos = new Pos;
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2;
-    playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2;
-    playerPos.symbol = '*';
 }
 
 
 Player::~Player()
 {
     // delete any heap members here
-    delete playerPos.pos;
-    playerPos.pos = nullptr;
+    delete playerPosList;
 }
 
-objPos Player::getPlayerPos() const
+objPosArrayList* Player::getPlayerPos() const
 {
     // return the reference to the playerPos arrray list
-    return playerPos;
+    return playerPosList;
 }
 
 void Player::updatePlayerDir()
@@ -64,19 +66,30 @@ void Player::updatePlayerDir()
 void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
+
+    updatePlayerDir();
+
+    //Create a temp objPos to calculate the new head position
+    //probably should get the head element of the player
+    //good starting point
+    objPos tempHeadPos = playerPosList->getHeadElement();
+    
     switch(myDir)
     {
+        //calculate the new position of the head
+        //using the the temp objPos
+
         case UP:
-            playerPos.pos->y--;
+            tempHeadPos.pos->y--;
             break;
         case DOWN:
-            playerPos.pos->y++;
+            tempHeadPos.pos->y++;
             break;
         case LEFT:
-            playerPos.pos->x--;
+            tempHeadPos.pos->x--;
             break;
         case RIGHT:
-            playerPos.pos->x++;
+            tempHeadPos.pos->x++;
             break;
         default:
             break;
@@ -84,27 +97,60 @@ void Player::movePlayer()
 
     if (myDir == LEFT || myDir == RIGHT)
     {
-        if (playerPos.pos->x < 1)
+        if (tempHeadPos.pos->x < 1)
         {
-            playerPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
+            tempHeadPos.pos->x = mainGameMechsRef->getBoardSizeX() - 2;
         }
-        else if (playerPos.pos->x > mainGameMechsRef->getBoardSizeX() - 2)
+        else if (tempHeadPos.pos->x > mainGameMechsRef->getBoardSizeX() - 2)
         {
-            playerPos.pos->x = 1;
+            tempHeadPos.pos->x = 1;
         }
     }
 
     if (myDir == UP || myDir == DOWN)
     {
-        if (playerPos.pos->y < 1)
+        if (tempHeadPos.pos->y < 1)
         {
-            playerPos.pos->y = mainGameMechsRef->getBoardSizeY() - 2;
+            tempHeadPos.pos->y = mainGameMechsRef->getBoardSizeY() - 2;
         }
-        else if (playerPos.pos->y > mainGameMechsRef->getBoardSizeY() - 2)
+        else if (tempHeadPos.pos->y > mainGameMechsRef->getBoardSizeY() - 2)
         {
-            playerPos.pos->y = 1;
+            tempHeadPos.pos->y = 1;
         }
+    }
+    //Insert temp objPos to head of the list
+    playerPosList->insertHead(tempHeadPos);
+
+    // check if the new temp objPos overlaps
+    // the food pos (get it from GameMechs)
+
+    // use isPosEqual() method from objPos class
+
+    // if overlapped, food consumed, DO NOT REMOVE SNAKE TAIL
+    // and take the respective actions to increase the score
+
+    //If no overlap, remove tail, complete movement
+    objPos foodPos = mainGameMechsRef->getFoodPos();
+    if(checkFoodConsumption())
+    {
+        increasePlayerLength();
+    }
+    else
+    {
+        playerPosList->removeTail();
     }
 }
 
 // More methods to be added
+bool Player::checkFoodConsumption()
+{
+    objPos foodPos = mainGameMechsRef->getFoodPos();
+    objPos headPos = playerPosList->getHeadElement();
+    return headPos.isPosEqual(&foodPos);
+}
+
+void Player::increasePlayerLength()
+{
+    mainGameMechsRef->incrementScore();
+    mainGameMechsRef->generateFood(playerPosList);
+}

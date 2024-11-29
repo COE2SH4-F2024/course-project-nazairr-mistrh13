@@ -67,36 +67,46 @@ void RunLogic(void)
     myPlayer->movePlayer();
     exitFlag = myGM->getExitFlagStatus();
 
-    objPos playerPos = myPlayer->getPlayerPos();
+    objPosArrayList* playerPos = myPlayer->getPlayerPos();
     objPos foodPos = myGM->getFoodPos();
-
-    if(playerPos.isPosEqual(&foodPos))
-    {
-        myGM->incrementScore();
-        myGM->generateFood(playerPos);
-    }
 }
 
 void DrawScreen(void)
 {
     MacUILib_clearScreen();    
 
-    objPos playerPos = myPlayer->getPlayerPos();
+    objPosArrayList* playerPos = myPlayer->getPlayerPos();
+    int playerSize = playerPos->getSize();
     objPos foodPos = myGM->getFoodPos();
-    int rows = myGM->getBoardSizeY();
-    int columns = myGM->getBoardSizeX();
+    int rows = myGM->getBoardSizeX();
+    int columns = myGM->getBoardSizeY(); //switch X and Y!!!!
 
-    for (int i=0; i < rows; i++)
+    for (int i=0; i < columns; i++)
     {
-        for (int j=0; j < columns; j++)
+        for (int j=0; j < rows; j++)
         {
-            if (i == 0 || i == rows - 1 || j == 0 || j == columns - 1)
+            //We now need to iterates through the playerPos array list
+            //to print all the segments out.
+            for(int k = 0; k < playerSize; k++)
+            {
+                objPos thisSeg = playerPos->getElement(k);
+
+                //check if the current segment x,y pos matches the (j,i) coordinate
+                //If yes, print symbol
+
+                //Watch out!!!
+                // We need to skip the if-else block below
+                // if we have printed something in the for loop
+
+            }
+            //at the end of the for loop, do something to determine
+            // whether to continue with the if-else or move on to
+            // the next ieration of i-j
+
+            //draw border
+            if (i == 0 || i == columns - 1 || j == 0 || j == rows - 1)
             {
                 MacUILib_printf("#");
-            }
-            else if (j == playerPos.pos->x && i == playerPos.pos->y)
-            {
-                MacUILib_printf("%c",playerPos.symbol);
             }
             else if (j==foodPos.pos->x && i == foodPos.pos->y)
             {
