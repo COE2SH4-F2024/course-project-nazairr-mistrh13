@@ -130,7 +130,6 @@ void Player::movePlayer()
     // and take the respective actions to increase the score
 
     //If no overlap, remove tail, complete movement
-    objPos foodPos = mainGameMechsRef->getFoodPos();
     if(checkFoodConsumption())
     {
         increasePlayerLength();
