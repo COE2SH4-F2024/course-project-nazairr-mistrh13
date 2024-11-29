@@ -11,10 +11,10 @@ GameMechs::GameMechs()
     boardSizeX = 30;
     boardSizeY= 15;
 
-    food.setObjPos(-10,10,'o'); // Intially set the food position outside of the game board.
+    food.setObjPos(-10,-10,'o'); // Intially set the food position outside of the game board.
     srand(time(NULL));
     
-    objPosArrayList* blockedPos;
+    objPosArrayList* blockedPos = nullptr;
     generateFood(blockedPos);
 }
 
@@ -28,10 +28,10 @@ GameMechs::GameMechs(int boardX, int boardY)
     boardSizeX = boardX;
     boardSizeY = boardY;
 
-    food.setObjPos(-10,10,'o'); // Intially set the food position outside of the game board.
+    food.setObjPos(-10,-10,'o'); // Intially set the food position outside of the game board.
     srand(time(NULL));
 
-    objPosArrayList* blockedPos;
+    objPosArrayList* blockedPos = nullptr;
     generateFood(blockedPos);
 }
 
@@ -104,7 +104,6 @@ void GameMechs::clearInput()
 
 // More methods should be added here
 
-// Does not work
 void GameMechs::generateFood (objPosArrayList* blockOff)
 {
     int randX, randY;
@@ -117,13 +116,15 @@ void GameMechs::generateFood (objPosArrayList* blockOff)
         tempFood.setObjPos(randX,randY,'o');   
 
         uniquePos = true;
-        for(int i = 0; i < blockOff->getSize(); i++)
-        {
-            objPos currElement = blockOff->getElement(i);
-            if(tempFood.isPosEqual(&currElement))
+        if(blockOff != nullptr) {
+            for(int i = 0; i < blockOff->getSize(); i++)
             {
-                uniquePos = false;
-                break;
+                objPos currElement = blockOff->getElement(i);
+                if(tempFood.isPosEqual(&currElement))
+                {
+                    uniquePos = false;
+                    break;
+                }
             }
         }
     }while (!uniquePos);

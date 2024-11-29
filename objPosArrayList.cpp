@@ -59,11 +59,13 @@ void objPosArrayList::removeTail()
 
 objPos objPosArrayList::getHeadElement() const
 {
+    if(listSize == 0) return objPos();
     return aList[0];
 }
 
 objPos objPosArrayList::getTailElement() const
 {
+    if(listSize == 0) return objPos();
     return aList[listSize - 1];
 }
 

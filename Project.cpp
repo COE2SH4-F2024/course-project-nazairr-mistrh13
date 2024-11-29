@@ -53,12 +53,12 @@ void Initialize(void)
 
 void GetInput(void)
 {
-    //myGM->clearInput();
-   if(MacUILib_hasChar())
-   {
-        char input = MacUILib_getChar();
-        myGM->setInput(input);
-   }
+    myGM->clearInput();
+    if(MacUILib_hasChar())
+    {
+            char input = MacUILib_getChar();
+            myGM->setInput(input);
+    }
 }
 
 void RunLogic(void)
@@ -79,7 +79,7 @@ void DrawScreen(void)
     int playerSize = playerPos->getSize();
     objPos foodPos = myGM->getFoodPos();
     int rows = myGM->getBoardSizeX();
-    int columns = myGM->getBoardSizeY(); //switch X and Y!!!!
+    int columns = myGM->getBoardSizeY();
 
     for (int i=0; i < columns; i++)
     {
