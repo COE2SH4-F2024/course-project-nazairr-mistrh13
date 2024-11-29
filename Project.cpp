@@ -87,6 +87,9 @@ void DrawScreen(void)
         {
             //We now need to iterates through the playerPos array list
             //to print all the segments out.
+
+            bool flag = false; // Check if we have printed something for i,j
+
             for(int k = 0; k < playerSize; k++)
             {
                 objPos thisSeg = playerPos->getElement(k);
@@ -98,13 +101,20 @@ void DrawScreen(void)
                 // We need to skip the if-else block below
                 // if we have printed something in the for loop
 
+                // If segement position matches i,j, then print the symbol
+                if (thisSeg.pos->x == j && thisSeg.pos->y == i)
+                {
+                    MacUILib_printf("%c", thisSeg.symbol);
+                    flag = true; // Changes to true, because we have printed something;
+                    break;
+                }
             }
             //at the end of the for loop, do something to determine
             // whether to continue with the if-else or move on to
             // the next ieration of i-j
 
-            //draw border
-            if (i == 0 || i == columns - 1 || j == 0 || j == rows - 1)
+            if (!flag){
+                if (i == 0 || i == columns - 1 || j == 0 || j == rows - 1)
             {
                 MacUILib_printf("#");
             }
@@ -116,6 +126,20 @@ void DrawScreen(void)
             {
                 MacUILib_printf(" ");
             }
+        }
+            //draw border
+            // if (i == 0 || i == columns - 1 || j == 0 || j == rows - 1)
+            // {
+            //     MacUILib_printf("#");
+            // }
+            // else if (j==foodPos.pos->x && i == foodPos.pos->y)
+            // {
+            //     MacUILib_printf("%c",foodPos.symbol);
+            // }
+            // else
+            // {
+            //     MacUILib_printf(" ");
+            // }
         }
         MacUILib_printf("\n");
     }
