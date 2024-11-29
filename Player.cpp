@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream>
 
 Player::Player(GameMechs* thisGMRef)
 {
@@ -127,6 +127,16 @@ void Player::movePlayer()
         else if (tempHeadPos.pos->y > mainGameMechsRef->getBoardSizeY() - 2)
         {
             tempHeadPos.pos->y = 1;
+        }
+    }
+
+    for (int i = 1; i< playerPosList->getSize(); i++){
+        objPos tempPos = playerPosList->getElement(i);
+        if (tempHeadPos.isPosEqual(&tempPos))
+        {
+            mainGameMechsRef->setLoseFlag();
+            mainGameMechsRef->setExitTrue();
+            return;
         }
     }
     //Insert temp objPos to head of the list
