@@ -29,6 +29,7 @@ GameMechs::GameMechs(int boardX, int boardY)
     boardSizeY = boardY;
 
     food.setObjPos(-10,10,'o'); // Intially set the food position outside of the game board.
+    srand(time(NULL));
 
     objPosArrayList* blockedPos;
     generateFood(blockedPos);
@@ -118,7 +119,8 @@ void GameMechs::generateFood (objPosArrayList* blockOff)
         uniquePos = true;
         for(int i = 0; i < blockOff->getSize(); i++)
         {
-            if(tempFood.isPosEqual(&blockOff->getElement(i)))
+            objPos currElement = blockOff->getElement(i);
+            if(tempFood.isPosEqual(&currElement))
             {
                 uniquePos = false;
                 break;
