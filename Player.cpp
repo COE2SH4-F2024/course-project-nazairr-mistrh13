@@ -119,14 +119,11 @@ void Player::movePlayer()
         }
     }
 
-    for (int i = 1; i< playerPosList->getSize(); i++){
-        objPos tempPos = playerPosList->getElement(i);
-        if (tempHeadPos.isPosEqual(&tempPos))
-        {
-            mainGameMechsRef->setLoseFlag();
-            mainGameMechsRef->setExitTrue();
-            return;
-        }
+    if(checkSelfCollision())
+    {
+        mainGameMechsRef->setLoseFlag();
+        mainGameMechsRef->setExitTrue();
+        return;
     }
     //Insert temp objPos to head of the list
     playerPosList->insertHead(tempHeadPos);
@@ -162,4 +159,17 @@ void Player::increasePlayerLength()
 {
     mainGameMechsRef->incrementScore();
     mainGameMechsRef->generateFood(playerPosList);
+}
+
+bool Player::checkSelfCollision()
+{
+    objPos tempHeadPos = playerPosList->getHeadElement();
+    for (int i = 1; i< playerPosList->getSize(); i++){
+        objPos tempPos = playerPosList->getElement(i);
+        if (tempHeadPos.isPosEqual(&tempPos))
+        {
+            return true;
+        }
+    }
+    return false;
 }
