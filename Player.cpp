@@ -120,7 +120,7 @@ void Player::movePlayer()
 
     playerPosList->insertHead(tempHeadPos); //Insert the new head in the list
 
-    if(checkFoodConsumption())
+    if(checkFoodConsumption()) //Check if food is consumed
     {
         increasePlayerLength(); //Prevent removal of tail to grow
     }
@@ -132,15 +132,52 @@ void Player::movePlayer()
 
 bool Player::checkFoodConsumption() 
 {
-    objPos foodPos = mainGameMechsRef->getFoodPos();
-    objPos headPos = playerPosList->getHeadElement();
-    return headPos.isPosEqual(&foodPos); //Check for food and player positions overlap
+    objPosArrayList* regularFoodList = mainGameMechsRef->getFood()->getRegularFood(); //Retrieves list of regular food
+    objPos headPos = playerPosList->getHeadElement(); //Retrieves element of snake head
+    objPos specialFood = mainGameMechsRef->getFood()->getSpecialFood(); //Retrieves the special food
+
+    for(int i = 0; i < regularFoodList->getSize(); i++)
+    {
+        objPos currElement = regularFoodList->getElement(i);
+        if(headPos.isPosEqual(&currElement) || headPos.isPosEqual(&specialFood))
+        {
+            return true; //Returns true if snake has eaten regular or special food
+        }
+    }
+    return false; //Returns false if snake did not eat food
 }
 
 void Player::increasePlayerLength()
 {
-    mainGameMechsRef->incrementScore(); //Increases score
-    mainGameMechsRef->generateFood(playerPosList); //Generate new food at random position
+    objPosArrayList* regularFoodList = mainGameMechsRef->getFood()->getRegularFood();
+    objPos specialFood = mainGameMechsRef->getFood()->getSpecialFood();
+    objPos headPos = playerPosList->getHeadElement();
+    objPos tailPos = playerPosList->getTailElement(); //Retrieves element of snake tail
+
+    if(specialFood.isPosEqual(&headPos)) //Checks if snake has eaten a special food
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            mainGameMechsRef->incrementScore(); //Increments the score by 20
+        }
+        //Increases the snake size 2 more times
+        //Total of 3 added to snake body because of insert head in movePlayer()
+        playerPosList->insertTail(tailPos);
+        playerPosList->insertTail(tailPos);
+        mainGameMechsRef->getFood()->generateFoodList(playerPosList); //Generate new food list
+        return;
+    }
+
+    for(int i = 0; i < regularFoodList->getSize(); i++)
+    {
+        objPos currElement = regularFoodList->getElement(i);
+        if(headPos.isPosEqual(&currElement))
+        {
+            mainGameMechsRef->incrementScore(); //Increments by 1 if snake has eaten regular food
+            mainGameMechsRef->getFood()->generateFoodList(playerPosList);
+            return;
+        }
+    }
 }
 
 bool Player::checkSelfCollision()

@@ -3,6 +3,7 @@
 #include "objPos.h"
 #include "Player.h"
 #include "GameMechs.h"
+#include "Food.h"
 
 using namespace std;
 
@@ -74,7 +75,8 @@ void DrawScreen(void)
 
     objPosArrayList* playerPos = myPlayer->getPlayerPos(); //Gets player position
     int playerSize = playerPos->getSize(); //Gets player size
-    objPos foodPos = myGM->getFoodPos(); //Get food position
+    objPos specialFood = myGM->getFood()->getSpecialFood(); //Get food position
+    objPosArrayList* regularFoodList = myGM->getFood()->getRegularFood();
     int rows = myGM->getBoardSizeX(); //Get board width
     int columns = myGM->getBoardSizeY(); //Get board height
 
@@ -100,20 +102,32 @@ void DrawScreen(void)
                 {
                     MacUILib_printf("#");
                 }
-                else if (j==foodPos.pos->x && i == foodPos.pos->y)
+                else if (j==specialFood.pos->x && i == specialFood.pos->y)
                 {
-                    MacUILib_printf("%c",foodPos.symbol); //Draw food
+                    MacUILib_printf("%c",specialFood.symbol); //Draw food
                 }
                 else
                 {
-                    MacUILib_printf(" "); //Draw empty space
+                    bool regularFlag = false;
+                    for(int k = 0; k < regularFoodList->getSize(); k++)
+                    {
+                        objPos regularFood = regularFoodList->getElement(k);
+                        if(j == regularFood.pos->x && i == regularFood.pos->y)
+                        {
+                            MacUILib_printf("%c",regularFood.symbol);
+                            regularFlag = true;
+                            break;
+                        }
+                    }
+                    if(!regularFlag) MacUILib_printf(" "); //Draw empty space
                 }
             }
         }
         MacUILib_printf("\n"); //Move to next line after each row
     }
-    //Print game controls and score
+    //Print instructions and score
     MacUILib_printf("Controls are WASD\nTo exit the game click the escape key\n");
+    MacUILib_printf("$ gives 20 points but increases size by 3.\n");
     MacUILib_printf("----------------------------------------------------------------\n");
     MacUILib_printf("Score: %d\n", myGM->getScore());
 

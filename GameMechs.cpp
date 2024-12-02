@@ -1,22 +1,22 @@
 #include "GameMechs.h"
 #include "MacUILib.h"
+#include "Food.h"
 
 GameMechs::GameMechs()
 {
-    input = 0;
+    input = 0; //Initialize input to null
+    //Initialize lose and exit flags to false
     exitFlag = false;
     loseFlag = false;
-    score = 0;
+    score = 0; //Initialize score to 0
 
     //Default board size: 30x15
     boardSizeX = 30;
     boardSizeY= 15;
 
-    food.setObjPos(-10,-10,'o'); // Intially set the food position outside of the game board.
-    srand(time(NULL));
-    
+    gameFood = new Food(boardSizeX, boardSizeY); //Used to manage Food for the board
     objPosArrayList* blockedPos = nullptr;
-    generateFood(blockedPos);
+    gameFood->generateFoodList(blockedPos); //Generate initial set of food
 }
 
 GameMechs::GameMechs(int boardX, int boardY)
@@ -25,13 +25,11 @@ GameMechs::GameMechs(int boardX, int boardY)
     exitFlag = false;
     loseFlag = false;
     score = 0;
-
+    //Custom board dimensions
     boardSizeX = boardX;
     boardSizeY = boardY;
 
-    food.setObjPos(-10,-10,'o'); // Intially set the food position outside of the game board.
-    srand(time(NULL));
-
+    gameFood = new Food(boardSizeX, boardSizeY);
     objPosArrayList* blockedPos = nullptr;
     generateFood(blockedPos);
 }
@@ -39,6 +37,7 @@ GameMechs::GameMechs(int boardX, int boardY)
 GameMechs::~GameMechs()
 {
     //No dynamic memory to clean up
+    delete gameFood; //Deallocate Food manager
 }
 
 bool GameMechs::getExitFlagStatus() const
@@ -68,7 +67,7 @@ int GameMechs::getScore() const
 
 void GameMechs::incrementScore()
 {
-    score = score++; //Increments the score by 1
+    score++; //Increments the score by 1
 }
 
 int GameMechs::getBoardSizeX() const
@@ -103,36 +102,11 @@ void GameMechs::clearInput()
 
 void GameMechs::generateFood (objPosArrayList* blockOff)
 {
-    int randX, randY;
-    objPos tempFood;
-    bool uniquePos = false;
-
-    do{
-        //Generate random food coordinates that are within the board boundaries
-        randX = rand() % (boardSizeX - 2) + 1;
-        randY = rand() % (boardSizeY - 2) + 1;
-        tempFood.setObjPos(randX,randY,'o'); //Regular food symbol 'o'
-
-        //Checks for conflict with player coordinates
-        uniquePos = true;
-        if(blockOff != nullptr) {
-            for(int i = 0; i < blockOff->getSize(); i++)
-            {
-                objPos currElement = blockOff->getElement(i);
-                if(tempFood.isPosEqual(&currElement))
-                {
-                    uniquePos = false;
-                    break;
-                }
-            }
-        }
-    }while (!uniquePos); //Retry until valid position is found
-
-    food.setObjPos(randX, randY, 'o'); //Update food position
-    
+    gameFood->generateRegularFood(blockOff); //Generates regular food
+    gameFood->generateSpecialFood(blockOff); //Generates special food
 }
 
-objPos GameMechs::getFoodPos() const
+Food* GameMechs::getFood()
 {
-    return food; //Return current food position
+    return gameFood; //Retrieves pointer to Food manager
 }
