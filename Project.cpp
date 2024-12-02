@@ -127,7 +127,7 @@ void DrawScreen(void)
     }
     //Print instructions and score
     MacUILib_printf("Controls are WASD\nTo exit the game click the escape key\n");
-    MacUILib_printf("$ gives 20 points but increases size by 3.\n");
+    MacUILib_printf("$ gives 10 points but increases size by 3.\n");
     MacUILib_printf("----------------------------------------------------------------\n");
     MacUILib_printf("Score: %d\n", myGM->getScore());
 

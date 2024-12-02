@@ -156,9 +156,9 @@ void Player::increasePlayerLength()
 
     if(specialFood.isPosEqual(&headPos)) //Checks if snake has eaten a special food
     {
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 10; i++)
         {
-            mainGameMechsRef->incrementScore(); //Increments the score by 20
+            mainGameMechsRef->incrementScore(); //Increments the score by 10
         }
         //Increases the snake size 2 more times
         //Total of 3 added to snake body because of insert head in movePlayer()
@@ -183,6 +183,7 @@ void Player::increasePlayerLength()
 bool Player::checkSelfCollision()
 {
     objPos tempHeadPos = playerPosList->getHeadElement();
+
     for (int i = 1; i< playerPosList->getSize(); i++)
     {
         objPos tempPos = playerPosList->getElement(i);
